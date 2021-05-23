@@ -12,40 +12,13 @@ import datetime
 # from Tkinter import Tk
 from playwright.sync_api import sync_playwright
 
-
-
 proxyurl = "https://www.proxy-list.download/HTTP"
 
 def getCrawleProxyPool_ArrAry():
-    # playwr = sync_playwright().start()
-    # browser = playwr.firefox.launch(
-    #             headless=False,
-    #             timeout=1000 * 80,
-    #             # proxy={
-    #             #     "server":proxy
-    #             # }
-    #             )
-            
-    # context = browser.new_context(
-    #     # locale='en-US',
-    #     # is_mobile=True,
-    #     # viewport={ 'width': 1280, 'height': 1024 },
-    #     # device_scale_factor=2,
-    #     # timezone_id='Europe/Berlin',
-    #     # geolocation={"longitude": 48.858455, "latitude": 2.294474},
-    #     # permissions=["geolocation"],
-    #     # color_scheme='dark',
-    #     # user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
-    
-    # )
-    # page = context.new_page()
-    # page.goto(proxyurl,timeout=1000 * 100)
-    # page.wait_for_selector('a.botons',timeout=1000 * 80)
-    # page.click('id =btn3')
-
     options = Options()
     options.use_chromium = True
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    options.add_argument('--headless')
     options.add_argument("--disable-notifications")
     chrome = webdriver.Chrome('./chromedriver/chromedriver.exe', chrome_options=options)
     chrome.get(proxyurl)
@@ -56,18 +29,10 @@ def getCrawleProxyPool_ArrAry():
     proxy_Arrary = proxy_pandas.to_numpy()
     proxy_Arrary_flattern = proxy_Arrary.flatten()
     list_arrary = proxy_Arrary_flattern.tolist()
-    # page.close()
-    # browser.close()
-    # context.close()
-    # del     page
-    # del     browser
-    # del     context
-
-    chrome.stop_client()
+    
     chrome.switch_to_alert().accept() 
     chrome.close()
     return list_arrary
-    # for proxy in proxy_Arrary:
 
 
 
@@ -130,18 +95,3 @@ def getWorking_proxy_arrary():
         thread.join()
     
     return working_proxy_array
-
-def toRequesyProxy(proxy_array):
-    strs = 'http://' + '{0}'
-    
-    resut_arrary = {"http": strs.format(i) for i in proxy_array}
-    return resut_arrary
-# proxy_array = ['1231','1231','1231']
-# strs = 'http://' + '{0}'
-# test ={}
-# resut_arrary = dict(http = strs.format(i) for i in proxy_array)
-    
-# # resut_arrary = {"http": strs.format(i) for i in proxy_array}
-# print(test)
-# return resut_arrary
-#Example run : echo -ne "192.168.1.1:231\n192.168.1.2:231" | python proxy_checkpy3-async.py
