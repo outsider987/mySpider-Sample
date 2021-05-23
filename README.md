@@ -69,7 +69,8 @@ C:.
 **e.myproxy:**
 
 1.爬取免費的proxy
-2.經過muyiple threads 驗證過拿的proxy都是活的,品質的話則不一定
+
+2.經過multiple threads 驗證過拿的proxy都是活的,品質的話則不一定
 
 **f.myfilter:**
 
