@@ -5,7 +5,7 @@ from spider_playwright import MySpider
 import myProxy
 
 # your 
-targetUrl ='https://18comic.org/albums/hanman'
+targetUrl ='https://outsider5987.blogspot.com/2021/04/5-seleium.html'
 
 
 def main():

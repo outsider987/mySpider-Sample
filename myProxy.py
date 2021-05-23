@@ -18,7 +18,7 @@ def getCrawleProxyPool_ArrAry():
     options = Options()
     options.use_chromium = True
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
-    options.add_argument('--headless')
+    # options.add_argument('--headless')
     options.add_argument("--disable-notifications")
     chrome = webdriver.Chrome('./chromedriver/chromedriver.exe', chrome_options=options)
     chrome.get(proxyurl)
