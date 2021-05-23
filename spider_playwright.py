@@ -138,18 +138,18 @@ class MySpider:
     def rootComicRequest(self, rootComicurl, thumbnail_url):
         try:
             # playwr = sync_playwright().start()
-            proxyt = FreeProxy().get()
-            work = False
-            while work==False:
-                work = myProxy.check_proxy(proxyt)
-                if work==False:
-                    proxyt = FreeProxy().get() 
-
+            # proxyt = FreeProxy().get()
+            # work = False
+            # while work==False:
+            #     work = myProxy.check_proxy(proxyt)
+            #     if work==False:
+            #         proxyt = FreeProxy().get() 
+            proxy  = random.choice(self.proxies)
             browser = self.playwr.firefox.launch(
                 headless=self.headless,
                 timeout=1000 * 80,
                 proxy={
-                    "server":proxyt
+                    "server":proxy
                 }
                 )
             

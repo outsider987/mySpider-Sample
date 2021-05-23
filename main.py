@@ -23,8 +23,8 @@ cateGeoryListurl = [
 
 def main():
     for rootUrl in cateGeoryListurl:
-        # proxies = myProxy.getWorking_proxy_arrary()
-        proxies = ''
+        proxies = myProxy.getWorking_proxy_arrary()
+        # proxies = ''
         # requset_proxies = proxy.toRequesyProxy(proxies)
         spider = MySpider(rootUrl,proxies)
         # spider = MySpider(rootUrl,proxies)
