@@ -7,7 +7,9 @@
 ## Scrapy缺點:
 
 1.在yield資料的時候,只能擇一pipline來做資料的存取,假如我要ftp跟sql跟json只能擇一來做資料的存取
+
 2.本身的功能還有些bug 是你無法去修復的
+
 3.開發的彈性太差,不好擴充功能,必須照著官方檔案來實作
 
 ## [MySpider:](https://github.com/outsider987/mySpider-Sample)
