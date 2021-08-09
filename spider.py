@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import mysql
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-import  ftp as MyFtp
+import ftp as MyFtp
 import os
 import urllib
 import urllib.request
@@ -21,35 +21,40 @@ from playwright.sync_api import sync_playwright
 import json
 import os
 import codecs
+import random
 
-
-
-base = 'https://18comic.org/'
+base = 'https://ceomap.site/#/main'
 sleepSec = 2
-# define your header 
-headers = {'user-agent': 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36',
-            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-            }
+# define your header
+
 
 class MySpider:
-    
-    def __init__(self, url,proxies):
+
+    def __init__(self, url, proxies):
         self.rootUrl = url
         self.proxies = proxies
-    
+
     def start_requests(self):
-
-        session = requests.Session()
-
-        rootResp  = requests.get(url=self.rootUrl, headers=headers)
-        rootResp.encoding = 'utf-8'
-        # respone
-        content = rootResp.content
-        soup = BeautifulSoup(content, "html5lib")   
-        element_data = soup.select('div.class')
-        print(element_data)
-        
-       
+        try:
+            fu = UserAgent(verify_ssl=False)
+            headers = {'user-agent': fu.firefox,
+                       'referer': 'https://ceomap.site/#/advertising#about'
+                       }
+            session = requests.Session()
+            proxies = {
+                "http": "http://"+random.choice(self.proxies),
+                # "http": "http://10.10.1.10:1080",
+            }
+            rootResp = requests.get(
+                url=self.rootUrl, headers=headers, proxies=proxies)
+            rootResp.encoding = 'utf-8'
+            # respone
+            content = rootResp.content
+            soup = BeautifulSoup(content, "html5lib")
+            element_data = soup.select('div.class')
+            print(element_data)
+        except requests.exceptions.HTTPError as err:
+            raise SystemExit(err)
 
     def save_json(json_arrary):
         storePath_name = os.getcwd() + '\\error.json'
@@ -60,7 +65,7 @@ class MySpider:
 
     def save_img(self, img_name, enter_ftp_path, img_url):
         print('star saving pic: ' + img_url)
-        # locale store path  
+        # locale store path
         document = os.getcwd() + '\\image'
         # path nameing
         comics_path = document + '\\' + enter_ftp_path
@@ -70,7 +75,7 @@ class MySpider:
             print('create document: ' + enter_ftp_path)
             os.makedirs(comics_path)
         # nameing image
-        pic_name = comics_path + '\\' + img_name 
+        pic_name = comics_path + '\\' + img_name
 
         # check we had img
         exists = os.path.exists(pic_name)
@@ -80,14 +85,14 @@ class MySpider:
 
         try:
             ua = UserAgent()
-            headers = {'User-Agent': ua.random} 
+            headers = {'User-Agent': ua.random}
             req = urllib.request.Request(img_url, headers=headers)
             response = urllib.request.urlopen(req, timeout=300)
 
             # reponse data
             data = response.read()
 
-            # we need extract data use zip 
+            # we need extract data use zip
             if response.info().get('Content-Encoding') == 'gzip':
                 data = zlib.decompress(data, 16 + zlib.MAX_WBITS)
 
@@ -98,7 +103,7 @@ class MySpider:
             print('save image finished:' + pic_name)
             return True
             # ftp write method
-            
+
             # fpLocal = open(pic_name, 'rb')
             # ftp = MyFtp.ftpconnect('156.67.222.57', 'u565698326.topceo.online', 'T5204t5204')
             # return MyFtp.uploadftpfile(ftp, fpLocal, enter_ftp_path, img_name)
@@ -111,4 +116,3 @@ class MySpider:
             error.append(enter_ftp_path)
             error.append(img_url)
             errorRecoder.saveErrorUrlToJson(error)
-
