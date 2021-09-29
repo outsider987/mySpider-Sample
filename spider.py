@@ -41,10 +41,7 @@ class MySpider:
                        'referer': 'https://ceomap.site/#/advertising#about'
                        }
             session = requests.Session()
-            proxies = {
-                "http": "http://"+random.choice(self.proxies),
-                # "http": "http://10.10.1.10:1080",
-            }
+
             rootResp = requests.get(
                 url=self.rootUrl, headers=headers, proxies=proxies)
             rootResp.encoding = 'utf-8'
