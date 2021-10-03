@@ -60,10 +60,11 @@ class MySpider:
                 for comicRoot in comicRoots:
                     a_href = await comicRoot.get_attribute('href')
                     await self.enterRoot(base+a_href)
-                # test = await page.query_selector('text=福利媛')
-                await page.click('a.comicBox_link__2ZHYh')
-                await page.click('text=福利媛')
-                await self.start_requests()
+
+                nextalls = await page.query_selector_all('a.btn-outline-primary')
+                nextHref = await nextalls[nextalls.__len__()-1].get_attribute('href')
+                await page.goto(base + nextHref, timeout=1000 * 100, referer='https://www.youtube.com/')
+
                 # await page.close()
                 # await browser.close()
                 # await context.close()
@@ -96,6 +97,15 @@ class MySpider:
             await page.goto(a_href, timeout=1000 * 100, referer='https://www.youtube.com/')
             await page.wait_for_selector('div.bookid_chapterBox__CRrx9', timeout=1000 * 10)
             comics = await page.query_selector_all('div.bookid_chapter__20FJi')
+            pTags = await page.query_selector_all('p')
+            rootStr = []
+            for index, p in enumerate(pTags):
+                if index < 4:
+                    text = await p.inner_text()
+                    ptext = text.split(':')
+                    rootStr.append(ptext[1])
+            print(rootStr)
+
             for comicRoot in comics:
                 a_href = await comicRoot.get_attribute('href')
                 await self.enterRoot(a_href)
