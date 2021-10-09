@@ -96,16 +96,26 @@ class MySpider:
             page = await context.new_page()
             await page.goto(a_href, timeout=1000 * 100, referer='https://www.youtube.com/')
             await page.wait_for_selector('div.bookid_chapterBox__CRrx9', timeout=1000 * 10)
-            comics = await page.query_selector_all('div.bookid_chapter__20FJi')
             pTags = await page.query_selector_all('p')
+            title_h5 = await page.query_selector('h5')
+            thumbnail_urlTag = await page.query_selector('div.col-md-3')
+            thumbnail_url = await thumbnail_urlTag.inner_text()
+            title = await title_h5.inner_text()
+            print(title)
             rootStr = []
             for index, p in enumerate(pTags):
                 if index < 4:
                     text = await p.inner_text()
                     ptext = text.split(':')
                     rootStr.append(ptext[1])
-            print(rootStr)
+            # print(rootStr)
+            mysql.storeRootComicsData(rootStr[3], a_href, title, thumbnail_url)
+            comics = await page.query_selector_all('div.bookid_chapter__20FJi')
 
-            for comicRoot in comics:
-                a_href = await comicRoot.get_attribute('href')
-                await self.enterRoot(a_href)
+            for comic in comics:
+                comic_href = await comic.get_attribute('href')
+                await self.enterComics(comic_href)
+
+    async def enterComics(self, comic_href):
+        async with async_playwright() as playwright3:
+            print('test')
