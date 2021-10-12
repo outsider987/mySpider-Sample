@@ -108,14 +108,50 @@ class MySpider:
                     text = await p.inner_text()
                     ptext = text.split(':')
                     rootStr.append(ptext[1])
-            # print(rootStr)
-            mysql.storeRootComicsData(rootStr[3], a_href, title, thumbnail_url)
+            print(rootStr)
+            descr = rootStr[3]
+            author = rootStr[0].strip()
+            status = rootStr[1]
+            genre = rootStr[2]
+
+            mysql.storeRootComicsData(
+                descr, a_href, title, author, status, thumbnail_url)
+
+            rouman_id_arrary = mysql.getData(
+                'id', 'rouman_rootcomics', 'title', title)
+            rouman_id = rouman_id_arrary[0]
+            mysql.storeGenreData(rouman_id, genre)
             comics = await page.query_selector_all('div.bookid_chapter__20FJi')
 
-            for comic in comics:
-                comic_href = await comic.get_attribute('href')
-                await self.enterComics(comic_href)
+            for index, comic in enumerate(comics):
+                comic_a_Tag = await comic.query_selector('a')
+                comic_href = await comic_a_Tag.get_attribute('href')
+                await self.enterComics(base + comic_href, rouman_id, index)
 
-    async def enterComics(self, comic_href):
+    async def enterComics(self, comic_href, rouman_rootcomics_id, chapter):
         async with async_playwright() as playwright3:
-            print('test')
+            fu = UserAgent(verify_ssl=False)
+            headers = {'user-agent': fu.firefox,
+                       #    'referer': 'https://ceomap.site/#/advertising#about'
+                       }
+            browser = await playwright3.firefox.launch(
+                headless=self.headless,
+                timeout=1000 * 80,
+                # proxy={
+                #     "server": proxy
+                # }
+            )
+            context = await browser.new_context()
+            page = await context.new_page()
+            await page.goto(comic_href, timeout=1000 * 100, referer='https://www.youtube.com/')
+            await page.wait_for_selector('img.id_comicImage__2vwcn', timeout=1000 * 80)
+            comics = await page.query_selector_all('img.id_comicImage__2vwcn')
+
+            img_list = []
+            for comic, in comics:
+                await comic.hover()
+                comicImg_href = await comic.get_attribute('src')
+
+                img_list.append(comicImg_href)
+
+            mysql.storeComicsData(rouman_rootcomics_id, img_list, chapter)
