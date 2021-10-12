@@ -17,8 +17,8 @@ from playwright.async_api import async_playwright
 import random
 import myfilter
 from threading import Thread
-import myProxy
-from fp.fp import FreeProxy
+# import myProxy
+# from fp.fp import FreeProxy
 import json
 import os
 import codecs
