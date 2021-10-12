@@ -148,7 +148,7 @@ class MySpider:
             comics = await page.query_selector_all('img.id_comicImage__2vwcn')
 
             img_list = []
-            for comic, in comics:
+            for comic in comics:
                 await comic.hover()
                 comicImg_href = await comic.get_attribute('src')
 
