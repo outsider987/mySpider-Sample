@@ -23,6 +23,7 @@ import json
 import os
 import codecs
 
+
 sleepSec = 2
 base = "https://rouman5.com"
 
@@ -123,6 +124,7 @@ class MySpider:
             mysql.storeGenreData(rouman_id, genre)
             comics = await page.query_selector_all('div.bookid_chapter__20FJi')
 
+            comics = myfilter.filter_chapter(rouman_id, comics)
             for index, comic in enumerate(comics):
                 comic_a_Tag = await comic.query_selector('a')
                 comic_href = await comic_a_Tag.get_attribute('href')
