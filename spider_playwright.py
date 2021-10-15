@@ -99,8 +99,8 @@ class MySpider:
             await page.wait_for_selector('div.bookid_chapterBox__CRrx9', timeout=1000 * 10)
             pTags = await page.query_selector_all('p')
             title_h5 = await page.query_selector('h5')
-            thumbnail_urlTag = await page.query_selector('div.col-md-3')
-            thumbnail_url = await thumbnail_urlTag.inner_text()
+            thumbnail_urlTag = await page.query_selector('div.comicBox_thumbImg__1aomD')
+            thumbnail_url = await thumbnail_urlTag.get_attribute('data-src')
             title = await title_h5.inner_text()
             print(title)
             rootStr = []
