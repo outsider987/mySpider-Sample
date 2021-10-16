@@ -80,7 +80,7 @@ def storeComicsData(rouman_rootcomics_id, url_arrary,chapter):
                 Values += value
             # command = "INSERT IGNORE INTO comics (name, url,path_name,onCanvas,rootComics_id) " + Values
             command = "INSERT IGNORE  INTO rouman_comics (url,rouman_rootcomics_id, chapter) " + \
-                Values + "ON DUPLICATE KEY UPDATE url = VALUES(url)"
+                Values + "ON DUPLICATE KEY UPDATE  url = VALUES(url)"
 
             cursor.execute(command)
             # # 取得所有資料

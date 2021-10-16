@@ -123,12 +123,12 @@ class MySpider:
             rouman_id = rouman_id_arrary[0]
             mysql.storeGenreData(rouman_id, genre)
             comics = await page.query_selector_all('div.bookid_chapter__20FJi')
-
-            comics = myfilter.filter_chapter(rouman_id, comics)
+            chapter = 0 
+            # comics,chapter = myfilter.filter_chapter(rouman_id, comics)
             for index, comic in enumerate(comics):
                 comic_a_Tag = await comic.query_selector('a')
                 comic_href = await comic_a_Tag.get_attribute('href')
-                await self.enterComics(base + comic_href, rouman_id, index)
+                await self.enterComics(base + comic_href, rouman_id, index +chapter)
 
     async def enterComics(self, comic_href, rouman_rootcomics_id, chapter):
         async with async_playwright() as playwright3:
@@ -146,12 +146,14 @@ class MySpider:
             context = await browser.new_context()
             page = await context.new_page()
             await page.goto(comic_href, timeout=1000 * 100, referer='https://www.youtube.com/')
-            await page.wait_for_selector('img.id_comicImage__2vwcn', timeout=1000 * 80)
+            await page.wait_for_selector('img.id_comicImage__2vwcn', timeout=10000)
             comics = await page.query_selector_all('img.id_comicImage__2vwcn')
-
+            menus =await  page.query_selector_all('div.id_pagination__3_EI_') 
             img_list = []
             for comic in comics:
+                # await menus[1].hover()
                 await comic.hover()
+                time.sleep(0.02)
                 comicImg_href = await comic.get_attribute('src')
 
                 img_list.append(comicImg_href)
