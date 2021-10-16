@@ -34,7 +34,7 @@ class MySpider:
         self.rootUrl = url
         self.proxies = proxies
         self.playwr = async_playwright().start()
-        self.headless = False
+        self.headless = True
 
     async def start_requests(self):
         try:
@@ -124,7 +124,7 @@ class MySpider:
             mysql.storeGenreData(rouman_id, genre)
             comics = await page.query_selector_all('div.bookid_chapter__20FJi')
             chapter = 0 
-            # comics,chapter = myfilter.filter_chapter(rouman_id, comics)
+            comics,chapter = myfilter.filter_chapter(rouman_id, comics)
             for index, comic in enumerate(comics):
                 comic_a_Tag = await comic.query_selector('a')
                 comic_href = await comic_a_Tag.get_attribute('href')
