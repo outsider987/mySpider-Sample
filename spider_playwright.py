@@ -122,7 +122,9 @@ class MySpider:
                 rouman_id_arrary = mysql.getData(
                     'id', 'rouman_rootcomics', 'title', title)
                 rouman_id = rouman_id_arrary[0]
-                mysql.storeGenreData(rouman_id, genre)
+                genre_arrary = genre.split(',')
+                for genre in genre_arrary:
+                    mysql.storeGenreData(rouman_id, genre)
                 comics = await page.query_selector_all('div.bookid_chapter__20FJi')
                 chapter = 0 
                 comics,chapter = myfilter.filter_chapter(rouman_id, comics)

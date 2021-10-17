@@ -45,9 +45,11 @@ def storeGenreData(rouman_rootcomics_id, name):
             # check we had table if we don't then create
             checkTableCommand = "CREATE TABLE IF NOT EXISTS rouman_genre (id INT(11) NOT NULL AUTO_INCREMENT, rouman_rootcomics_id int,name varchar(300),PRIMARY KEY (id),FOREIGN KEY(rouman_rootcomics_id) REFERENCES rouman_rootcomics(id) ON UPDATE CASCADE ON DELETE NO ACTION )ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC"
             cursor.execute(checkTableCommand)
+
+            
             # insert data
-            command = "INSERT INTO rouman_genre (rouman_rootcomics_id,name) VALUES('%s','%s') ON DUPLICATE KEY UPDATE name = %s" % (
-                rouman_rootcomics_id, name, name)
+            command = "INSERT INTO rouman_genre (rouman_rootcomics_id,name) select '%s','%s' where not exists (select * from rouman_genre where  rouman_rootcomics_id = %s and name ='%s' )" % (
+                rouman_rootcomics_id, name, rouman_rootcomics_id,name)
 
             # apply command
             cursor.execute(command)
