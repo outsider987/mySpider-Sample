@@ -64,7 +64,9 @@ class MySpider:
 
                 nextalls = await page.query_selector_all('a.btn-outline-primary')
                 nextHref = await nextalls[nextalls.__len__()-1].get_attribute('href')
-                await page.goto(base + nextHref, timeout=1000 * 100, referer='https://www.youtube.com/')
+                self.rootUrl = base + nextHref
+                await self.start_requests(self)
+                # await page.goto(base + nextHref, timeout=1000 * 100, referer='https://www.youtube.com/')
 
                 # await page.close()
                 # await browser.close()
@@ -85,8 +87,8 @@ class MySpider:
             async with async_playwright() as playwright2:
                 fu = UserAgent(verify_ssl=False)
                 headers = {'user-agent': fu.firefox,
-                        #    'referer': 'https://ceomap.site/#/advertising#about'
-                        }
+                           #    'referer': 'https://ceomap.site/#/advertising#about'
+                           }
                 browser = await playwright2.firefox.launch(
                     headless=self.headless,
                     timeout=1000 * 80,
@@ -100,8 +102,8 @@ class MySpider:
                 await page.wait_for_selector('div.bookid_chapterBox__CRrx9', timeout=1000 * 10)
                 pTags = await page.query_selector_all('p')
                 title_h5 = await page.query_selector('h5')
-                thumbnail_urlTag = await page.query_selector('div.comicBox_thumbImg__1aomD')
-                thumbnail_url = await thumbnail_urlTag.get_attribute('data-src')
+                thumbnail_urlTag = await page.query_selector('img.img-thumbnail')
+                thumbnail_url = await thumbnail_urlTag.get_attribute('src')
                 title = await title_h5.inner_text()
                 print(title)
                 rootStr = []
@@ -126,24 +128,23 @@ class MySpider:
                 for genre in genre_arrary:
                     mysql.storeGenreData(rouman_id, genre)
                 comics = await page.query_selector_all('div.bookid_chapter__20FJi')
-                chapter = 0 
-                comics,chapter = myfilter.filter_chapter(rouman_id, comics)
+                chapter = 0
+                comics, chapter = myfilter.filter_chapter(rouman_id, comics)
                 for index, comic in enumerate(comics):
                     comic_a_Tag = await comic.query_selector('a')
                     comic_href = await comic_a_Tag.get_attribute('href')
-                    await self.enterComics(base + comic_href, rouman_id, index +chapter)
+                    await self.enterComics(base + comic_href, rouman_id, index + chapter)
         except Exception as e:
             print(e)
             pass
-            
 
     async def enterComics(self, comic_href, rouman_rootcomics_id, chapter):
         try:
             async with async_playwright() as playwright3:
                 fu = UserAgent(verify_ssl=False)
                 headers = {'user-agent': fu.firefox,
-                        #    'referer': 'https://ceomap.site/#/advertising#about'
-                        }
+                           #    'referer': 'https://ceomap.site/#/advertising#about'
+                           }
                 browser = await playwright3.firefox.launch(
                     headless=self.headless,
                     timeout=1000 * 80,
@@ -156,12 +157,12 @@ class MySpider:
                 await page.goto(comic_href, timeout=1000 * 100, referer='https://www.youtube.com/')
                 await page.wait_for_selector('img.id_comicImage__2vwcn', timeout=10000)
                 comics = await page.query_selector_all('img.id_comicImage__2vwcn')
-                menus =await  page.query_selector_all('div.id_pagination__3_EI_') 
+                menus = await page.query_selector_all('div.id_pagination__3_EI_')
                 img_list = []
                 for comic in comics:
                     # await menus[1].hover()
                     await comic.hover()
-                    time.sleep(0.02)
+                    time.sleep(0.1)
                     comicImg_href = await comic.get_attribute('src')
 
                     img_list.append(comicImg_href)

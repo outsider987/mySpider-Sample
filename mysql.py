@@ -2,12 +2,21 @@ import pymysql
 from pymysql.converters import escape_string
 
 # data base setting
+# db_settings = {
+#     "host": "156.67.222.43",
+#     "port": 3306,
+#     "user": "u565698326_Comics987",
+#     "password": "T5204t5204",
+#     "db": "u565698326_Comics",
+#     "charset": "utf8",
+#     "autocommit": True
+# }
 db_settings = {
-    "host": "156.67.222.43",
+    "host": "127.0.0.1",
     "port": 3306,
-    "user": "u565698326_Comics987",
-    "password": "T5204t5204",
-    "db": "u565698326_Comics",
+    "user": "root",
+    "password": "",
+    "db": "comics",
     "charset": "utf8",
     "autocommit": True
 }
@@ -46,10 +55,9 @@ def storeGenreData(rouman_rootcomics_id, name):
             checkTableCommand = "CREATE TABLE IF NOT EXISTS rouman_genre (id INT(11) NOT NULL AUTO_INCREMENT, rouman_rootcomics_id int,name varchar(300),PRIMARY KEY (id),FOREIGN KEY(rouman_rootcomics_id) REFERENCES rouman_rootcomics(id) ON UPDATE CASCADE ON DELETE NO ACTION )ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC"
             cursor.execute(checkTableCommand)
 
-            
             # insert data
             command = "INSERT INTO rouman_genre (rouman_rootcomics_id,name) select '%s','%s' where not exists (select * from rouman_genre where  rouman_rootcomics_id = %s and name ='%s' )" % (
-                rouman_rootcomics_id, name, rouman_rootcomics_id,name)
+                rouman_rootcomics_id, name, rouman_rootcomics_id, name)
 
             # apply command
             cursor.execute(command)
@@ -59,12 +67,12 @@ def storeGenreData(rouman_rootcomics_id, name):
         print("storeRootComicsData had error:\n" + command)
 
 
-def storeComicsData(rouman_rootcomics_id, url_arrary,chapter):
+def storeComicsData(rouman_rootcomics_id, url_arrary, chapter):
     try:
         conn = pymysql.connect(**db_settings)
         with conn.cursor() as cursor:
             # check we had table if we don't then create
-            checkTableCommand = "CREATE TABLE IF NOT EXISTS rouman_comics (id INT(11) NOT NULL AUTO_INCREMENT, rouman_rootcomics_id INT not null,name varchar(300),url varchar(600) NOT NULL,PRIMARY KEY (id),FOREIGN KEY(rouman_rootcomics_id) REFERENCES rouman_rootcomics(id) ON UPDATE CASCADE ON DELETE NO ACTION  )ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC"
+            checkTableCommand = "CREATE TABLE IF NOT EXISTS rouman_comics (id INT(11) NOT NULL AUTO_INCREMENT, rouman_rootcomics_id INT not null,chapter varchar(300),url varchar(600) NOT NULL,PRIMARY KEY (id),FOREIGN KEY(rouman_rootcomics_id) REFERENCES rouman_rootcomics(id) ON UPDATE CASCADE ON DELETE NO ACTION  )ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC"
             cursor.execute(checkTableCommand)
             # insert data
             Values = "VALUES "
