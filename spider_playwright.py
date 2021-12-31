@@ -11,7 +11,7 @@ import time
 import errorRecoder
 from fake_useragent import UserAgent
 
-import undetected_chromedriver as uc
+# import undetected_chromedriver as uc
 import asyncio
 from playwright.async_api import async_playwright
 import random
@@ -56,8 +56,8 @@ class MySpider:
                 page = await context.new_page()
                 await page.goto(self.rootUrl, timeout=1000 * 100, referer='https://www.youtube.com/')
                 # here you need to redefine your want element class
-                await page.wait_for_selector('ul.books_listArea__2YYEg ', timeout=1000 * 10)
-                comicRoots = await page.query_selector_all('a.comicBox_link__2ZHYh')
+                await page.wait_for_selector('ul.books_listArea__U8Mw1', timeout=1000 * 10)
+                comicRoots = await page.query_selector_all('a.comicBox_link__wrzLP')
                 for comicRoot in comicRoots:
                     a_href = await comicRoot.get_attribute('href')
                     await self.enterRoot(base+a_href)
@@ -99,7 +99,7 @@ class MySpider:
                 context = await browser.new_context()
                 page = await context.new_page()
                 await page.goto(a_href, timeout=1000 * 100, referer='https://www.youtube.com/')
-                await page.wait_for_selector('div.bookid_chapterBox__CRrx9', timeout=1000 * 10)
+                await page.wait_for_selector('div.bookid_chapterBox__JnRQ_', timeout=1000 * 10)
                 pTags = await page.query_selector_all('p')
                 title_h5 = await page.query_selector('h5')
                 thumbnail_urlTag = await page.query_selector('img.img-thumbnail')
@@ -127,7 +127,7 @@ class MySpider:
                 genre_arrary = genre.split(',')
                 for genre in genre_arrary:
                     mysql.storeGenreData(rouman_id, genre)
-                comics = await page.query_selector_all('div.bookid_chapter__20FJi')
+                comics = await page.query_selector_all('div.bookid_chapter__uNgYr')
                 chapter = 0
                 comics, chapter = myfilter.filter_chapter(rouman_id, comics)
                 for index, comic in enumerate(comics):
@@ -155,9 +155,9 @@ class MySpider:
                 context = await browser.new_context()
                 page = await context.new_page()
                 await page.goto(comic_href, timeout=1000 * 100, referer='https://www.youtube.com/')
-                await page.wait_for_selector('img.id_comicImage__2vwcn', timeout=10000)
-                comics = await page.query_selector_all('img.id_comicImage__2vwcn')
-                menus = await page.query_selector_all('div.id_pagination__3_EI_')
+                await page.wait_for_selector('img.id_comicImage__B3NWD', timeout=10000)
+                comics = await page.query_selector_all('img.id_comicImage__B3NWD')
+                menus = await page.query_selector_all('div.id_pagination___z7IR')
                 img_list = []
                 for comic in comics:
                     # await menus[1].hover()

@@ -31,7 +31,7 @@ def storeRootComicsData(descr, link, title, author, status, thumbnail_url):
         # build Cursor object
         with conn.cursor() as cursor:
             # check we had table if we don't then create
-            checkTableCommand = "CREATE TABLE IF NOT EXISTS rouman_rootcomics (id INT(11) NOT NULL AUTO_INCREMENT, descr varchar(300),link varchar(300),title varchar(20),author varchar(600),status varchar(600),thumbnail_url varchar(600) NOT NULL,PRIMARY KEY (id) )ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC"
+            checkTableCommand = "CREATE TABLE IF NOT EXISTS rouman_rootcomics (id INT(11) NOT NULL AUTO_INCREMENT, descr varchar(300),link varchar(300),title varchar(300),author varchar(600),status varchar(600),thumbnail_url varchar(600) NOT NULL,PRIMARY KEY (id) )ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC"
             cursor.execute(checkTableCommand)
             # insert data
             command = "INSERT  INTO rouman_rootcomics (descr,link, title,author, status,thumbnail_url) SELECT '%s','%s','%s','%s','%s','%s'  WHERE NOT EXISTS (SELECT * FROM rouman_rootcomics WHERE title = '%s' )" % (
