@@ -44,7 +44,7 @@ class MySpider:
                 headers = {'user-agent': fu.firefox,
                            #    'referer': 'https://ceomap.site/#/advertising#about'
                            }
-                browser = await p.firefox.launch(
+                browser = await p.chromium.launch(
                     headless=self.headless,
                     timeout=1000 * 80,
                     # proxy={
@@ -89,7 +89,7 @@ class MySpider:
                 headers = {'user-agent': fu.firefox,
                            #    'referer': 'https://ceomap.site/#/advertising#about'
                            }
-                browser = await playwright2.firefox.launch(
+                browser = await playwright2.chromium.launch(
                     headless=self.headless,
                     timeout=1000 * 80,
                     # proxy={
@@ -145,7 +145,7 @@ class MySpider:
                 headers = {'user-agent': fu.firefox,
                            #    'referer': 'https://ceomap.site/#/advertising#about'
                            }
-                browser = await playwright3.firefox.launch(
+                browser = await playwright3.chromium.launch(
                     headless=self.headless,
                     timeout=1000 * 80,
                     # proxy={
@@ -161,8 +161,10 @@ class MySpider:
                 img_list = []
                 for comic in comics:
                     # await menus[1].hover()
+                    # comic.wait_for_selector
                     await comic.hover()
                     time.sleep(0.1)
+                    page.wait_for_event('load')
                     comicImg_href = await comic.get_attribute('src')
 
                     img_list.append(comicImg_href)
