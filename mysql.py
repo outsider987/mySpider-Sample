@@ -12,11 +12,11 @@ from pymysql.converters import escape_string
 #     "autocommit": True
 # }
 db_settings = {
-    "host": "127.0.0.1",
+    "host": "156.67.222.43",
     "port": 3306,
-    "user": "root",
-    "password": "",
-    "db": "comics",
+    "user": "u565698326_rouman",
+    "password": "T5204t5204",
+    "db": "u565698326_rouman",
     "charset": "utf8",
     "autocommit": True
 }
