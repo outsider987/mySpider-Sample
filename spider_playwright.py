@@ -34,7 +34,7 @@ class MySpider:
         self.rootUrl = url
         self.proxies = proxies
         self.playwr = async_playwright().start()
-        self.headless = True
+        self.headless = False
 
     async def start_requests(self):
         try:
@@ -164,7 +164,7 @@ class MySpider:
                     # comic.wait_for_selector
                     await comic.hover()
                     time.sleep(0.1)
-                    await page.wait_for_event('load')
+
                     comicImg_href = await comic.get_attribute('src')
 
                     img_list.append(comicImg_href)
